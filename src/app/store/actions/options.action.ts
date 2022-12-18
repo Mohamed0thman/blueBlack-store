@@ -15,7 +15,7 @@ import { OptionsState } from "../slices/options.slice";
 /// options actions
 /// get all category action
 export const getOptions = createAsyncThunk<OptionsState>(
-  "getCategories",
+  "getOptions",
   async (_, thunkAPI) => {
     try {
       const optionssSnapShot = await getDocs(collection(db, "options"));

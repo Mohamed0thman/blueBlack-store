@@ -1,11 +1,15 @@
 export type Product = {
   productId: string;
   productName: string;
+  categoryName: string;
+  subcategoryName: string;
   ProductPrice: number;
   productImage: string;
   productColors: string[];
   productSizes: string[];
-  productVariant?: ProductVariant[];
+  productVariant: ProductVariant[];
+  totalQuantity: number;
+  discount: number;
 };
 
 export type ProductVariant = {
@@ -14,4 +18,5 @@ export type ProductVariant = {
   size: string;
   extraPrice: number;
   galary: string[];
+  quantity: number;
 };

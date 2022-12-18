@@ -4,7 +4,6 @@ import { ToastContainer } from "react-toastify";
 import LoginPage from "../../features/account/Login";
 import Register from "../../features/account/Register";
 import Dashboard from "../../features/admin/Dashboard";
-import ProductForm from "../../features/admin/ProductForm";
 import HomePage from "../../features/home/HomePage";
 import { auth, db, doc, getDoc } from "../fireBase";
 import { User } from "../models";
@@ -20,6 +19,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Categories from "../../features/admin/categories/Categories";
 import Subcategories from "../../features/admin/categories/Subcategories";
 import OptionsPage from "../../features/admin/options/OptionsPage";
+import PreviewPriductTable from "../../features/admin/products/PreviewPriductTable";
+import ProductForm from "../../features/admin/products/ProductForm";
 
 function App() {
   const { isLoading } = useAppSelector((state) => state.auth);
@@ -64,7 +65,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/dashboard/categories"
           element={
@@ -73,7 +73,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/dashboard/categories/:categoryName"
           element={
@@ -82,7 +81,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/dashboard/options"
           element={
@@ -91,8 +89,22 @@ function App() {
             </PrivateRoute>
           }
         />
-
-        <Route path="/add-product" element={<ProductForm />} />
+        <Route
+          path="/dashboard/products"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <PreviewPriductTable />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/products/create"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <ProductForm />
+            </PrivateRoute>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
       </Routes>

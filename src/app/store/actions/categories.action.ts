@@ -21,7 +21,7 @@ export const getCategories = createAsyncThunk<CategoriesState>(
     try {
       const categoriesSnapShot = await getDocs(collection(db, "categories"));
 
-      const category = categoriesSnapShot.docs.map((docSnapshot) => {
+      const categorys = categoriesSnapShot.docs.map((docSnapshot) => {
         const { categoryName, categoryOrder, subcategories } =
           docSnapshot.data();
 
@@ -33,7 +33,9 @@ export const getCategories = createAsyncThunk<CategoriesState>(
         };
       });
 
-      return { categories: category };
+      console.log("action ", categorys);
+
+      return { categories: categorys };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }

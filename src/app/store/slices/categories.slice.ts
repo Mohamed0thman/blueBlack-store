@@ -28,6 +28,8 @@ const categoriesSlice = createSlice({
   extraReducers: (builder) => {
     // get categories
     builder.addCase(getCategories.fulfilled, (state, action) => {
+      console.log("action.payload.categories",action.payload.categories);
+      
       state.categories = action.payload.categories;
       state.isLoading = false;
     });

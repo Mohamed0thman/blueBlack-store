@@ -25,8 +25,8 @@ function Header() {
             <LinkContainer to="/dashboard">
               <Nav.Link>dashboard</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/add-product">
-              <Nav.Link>add product</Nav.Link>
+            <LinkContainer to="/dashboard/products">
+              <Nav.Link>products</Nav.Link>
             </LinkContainer>
           </Nav>
           <Nav>
