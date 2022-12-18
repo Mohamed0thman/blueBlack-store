@@ -4,6 +4,7 @@ import Size from "./size";
 import Color from "./color";
 import { Product, ProductVariant } from "./product";
 import { Category, Subcategory } from "./category";
+import { Option } from "./options";
 
 export type {
   Basket,
@@ -15,4 +16,5 @@ export type {
   ProductVariant,
   Category,
   Subcategory,
+  Option,
 };

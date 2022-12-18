@@ -14,7 +14,6 @@ export const createNewProduct = createAsyncThunk<Product, FieldValues>(
   "options",
   async (req, thunkAPI) => {
     try {
-      console.log("product", req);
 
       const docColorRef = await addDoc(collection(db, "product"), {
         productName: req.name,

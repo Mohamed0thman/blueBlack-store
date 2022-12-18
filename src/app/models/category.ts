@@ -1,5 +1,5 @@
 export type Category = {
-  categoryId?: string;
+  categoryId: string;
   categoryName: string;
   categoryOrder: number;
   subcategories: Subcategory[];

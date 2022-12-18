@@ -81,7 +81,6 @@ export const login = createAsyncThunk<AuthState, FieldValues>(
         basket: userDoc.data()?.basket,
         photoURL: userDoc.data()?.photoURL,
       };
-      console.log("user", user);
 
       return { user };
     } catch (error: any) {

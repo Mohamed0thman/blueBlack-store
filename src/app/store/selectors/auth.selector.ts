@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../configureStore";
-import { AuthState } from "../types/auth.type";
+import { AuthState } from "../slices/auth.slice";
 
 export const authSelector: (state: RootState) => AuthState = (
   state: RootState

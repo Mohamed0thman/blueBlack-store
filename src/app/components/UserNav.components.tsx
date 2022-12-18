@@ -2,7 +2,7 @@ import React from "react";
 import { NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { User } from "../models/user";
+import { User } from "../models";
 import { logout } from "../store/actions/auth.action";
 import { useAppDispatch } from "../store/configureStore";
 
@@ -18,7 +18,6 @@ const UserNav = ({ user }: { user: User }) => {
     if (fullName.length > 0) {
       lastLetter = fullName[fullName.length - 1][0];
     }
-    console.log("full name", firstLatter, lastLetter);
 
     return firstLatter + " " + lastLetter;
   }

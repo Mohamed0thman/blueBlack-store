@@ -16,10 +16,10 @@ import Header from "./Header";
 import PrivateRoute from "./PrivateRoute";
 
 import "react-toastify/dist/ReactToastify.css";
-import Colors from "../../features/admin/options/Colors";
-import Sizes from "../../features/admin/options/Sizes";
+
 import Categories from "../../features/admin/categories/Categories";
 import Subcategories from "../../features/admin/categories/Subcategories";
+import OptionsPage from "../../features/admin/options/OptionsPage";
 
 function App() {
   const { isLoading } = useAppSelector((state) => state.auth);
@@ -64,22 +64,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/dashboard/option-color"
-          element={
-            <PrivateRoute roles={["admin"]}>
-              <Colors />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/dashboard/option-size"
-          element={
-            <PrivateRoute roles={["admin"]}>
-              <Sizes />
-            </PrivateRoute>
-          }
-        />
 
         <Route
           path="/dashboard/categories"
@@ -91,10 +75,19 @@ function App() {
         />
 
         <Route
-          path="/dashboard/Categories/:catehoryId"
+          path="/dashboard/categories/:categoryName"
           element={
             <PrivateRoute roles={["admin"]}>
               <Subcategories />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/options"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <OptionsPage />
             </PrivateRoute>
           }
         />

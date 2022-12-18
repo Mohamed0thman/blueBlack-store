@@ -4,76 +4,94 @@ import {
   addDoc,
   collection,
   db,
+  deleteDoc,
   doc,
-  getDoc,
   getDocs,
-  setDoc,
+  updateDoc,
 } from "../../fireBase";
-import { Color, Size } from "../../models";
+import { Option } from "../../models";
+import { OptionsState } from "../slices/options.slice";
 
-export const createNewColor = createAsyncThunk<Color, FieldValues>(
-  "options",
-  async (req, thunkAPI) => {
+/// options actions
+/// get all category action
+export const getOptions = createAsyncThunk<OptionsState>(
+  "getCategories",
+  async (_, thunkAPI) => {
     try {
-      console.log("color", req);
+      const optionssSnapShot = await getDocs(collection(db, "options"));
 
-      const docColorRef = await addDoc(collection(db, "colors"), {
-        name: req.colorName,
-        value: req.colorValue,
+      const options = optionssSnapShot.docs.map((docSnapshot) => {
+        const { name, type, value } = docSnapshot.data();
+        return {
+          id: docSnapshot.id,
+          name,
+          value,
+          type,
+        };
       });
 
-      const color: Color = {
-        colorId: docColorRef?.id,
-        colorName: req.colorName,
-        colorValue: req.colorValue,
-      };
-
-      return color;
+      return { options };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
   }
 );
 
-export const createNewSize = createAsyncThunk<Size, FieldValues>(
-  "options",
+///  create Option
+
+export const createOption = createAsyncThunk<OptionsState, FieldValues>(
+  "postOption",
   async (req, thunkAPI) => {
     try {
-      console.log("color", req);
-
-      const docSizeRef = await addDoc(collection(db, "sizes"), {
-        name: req.sizeName,
-        value: req.sizeValue,
+      const docOptionRef = await addDoc(collection(db, "options"), {
+        name: req.name,
+        value: req.value,
+        type: req.type,
       });
 
-      const size: Size = {
-        sizeId: docSizeRef?.id,
-        sizeName: req.sizeName,
-        sizeValue: req.sizeValue,
-      };
+      const option = {
+        id: docOptionRef.id,
+        name: req.name,
+        value: req.value,
+        type: req.type,
+      } as Option;
+      console.log("create req", option);
 
-      console.log("size", size);
-
-      return size;
+      return { options: [option] };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
   }
 );
 
-export const readOptions = createAsyncThunk<FieldValues>(
-  "options",
+export const updateOption = createAsyncThunk<Option, FieldValues>(
+  "updateOption",
   async (req, thunkAPI) => {
     try {
-      console.log("color", req);
+      const docRef = doc(db, "options", req.id);
 
-      const sizesDocs = await getDocs(collection(db, "sizes"));
-      const colorsDocs = await getDocs(collection(db, "colors"));
+      // Update the timestamp field with the value from the server
+      await updateDoc(docRef, {
+        name: req.name,
+        value: req.value,
+        type: req.type,
+      });
 
-      console.log(sizesDocs);
-      console.log(colorsDocs);
+      return req as Option;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
 
-      return {};
+export const deleteOption = createAsyncThunk<{ id: string }, { id: string }>(
+  "deleteOption",
+  async (req, thunkAPI) => {
+    try {
+      console.log("deleye", req.id);
+
+      await deleteDoc(doc(db, "options", req.id));
+      return { id: req.id };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }

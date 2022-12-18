@@ -33,7 +33,7 @@ function LoginPage() {
       toast.success("Login successful ");
       navigate(from ? from : "/");
     } catch (error) {
-      console.log(error);
+      error;
     }
   }
 

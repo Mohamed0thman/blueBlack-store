@@ -10,7 +10,7 @@ interface Props {
 export default function PrivateRoute({ children, roles }: Props) {
   const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
-  console.log(user);
+  user;
   if (!user) {
     return <Navigate to="/login" state={{ from: location.pathname }} />;
   }

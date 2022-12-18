@@ -11,9 +11,11 @@ import {
   getDoc,
   collection,
   where,
-  addDoc
-  , 
-  
+  addDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  deleteDoc,
 } from "firebase/firestore";
 
 import {
@@ -30,14 +32,18 @@ import {
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+console.log(JSON.stringify(import.meta.env.APP_API_KEY));
+console.log(import.meta.env.VITE_API_KEY);
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDt0V19Ns6ebQ3Jlz0Yyv5VMEy7E-Dlwbg",
-  authDomain: "blueblack-59ff2.firebaseapp.com",
-  projectId: "blueblack-59ff2",
-  storageBucket: "blueblack-59ff2.appspot.com",
-  messagingSenderId: "911789604149",
-  appId: "1:911789604149:web:176c3fb2da59b8564a607c",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGIN_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
+
 //init firebase app
 const app = initializeApp(firebaseConfig);
 
@@ -63,5 +69,10 @@ export {
   getDocs,
   collection,
   where,
-  getDoc,addDoc
+  getDoc,
+  addDoc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+  deleteDoc,
 };
