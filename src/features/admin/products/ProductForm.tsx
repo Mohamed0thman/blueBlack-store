@@ -44,10 +44,15 @@ const ProductForm = () => {
     dispatch(getOptions());
   }, []);
 
-  function handelOnCatgorySelect(value: number) {
-    const sub = categories[value].subcategories;
-    setSubcategories(sub);
-  }
+  useEffect(() => {
+    if (watch().categoryName) {
+      setSubcategories(
+        categories[watch().categoryName as number].subcategories
+      );
+    } else {
+      setSubcategories([]);
+    }
+  }, [watch().categoryName]);
 
   return (
     <Container fluid="md">
@@ -67,10 +72,11 @@ const ProductForm = () => {
 
               <Form.Select
                 {...register("categoryName", { required: true })}
-                onChange={(e) => handelOnCatgorySelect(Number(e.target.value))}
                 aria-label="Default select example"
               >
-                <option>Open this select menu</option>
+                <option defaultValue="" value="">
+                  Open this select menu
+                </option>
                 {categories.length
                   ? categories.map((category, i) => (
                       <option key={category.categoryId} value={i}>
