@@ -1,12 +1,13 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { Product } from "../../models";
+import { getProducts, createProduct } from "../actions/product.action";
 
-export interface ProdictState {
+export interface IProductState {
   products: Product[];
   error?: SerializedError;
   isLoading?: boolean;
 }
-const initialState: ProdictState = {
+const initialState: IProductState = {
   products: [],
   error: undefined,
   isLoading: true,
@@ -16,6 +17,24 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(getProducts.fulfilled, (state, action) => {
+      state.products = action.payload.products;
+      state.isLoading = false;
+    });
+    builder.addCase(getProducts.rejected, (state, action) => {
+      state.error = action.error;
+      state.isLoading = false;
+    });
+
+    builder.addCase(createProduct.fulfilled, (state, action) => {
+      state.products = state.products.concat(action.payload.products);
+      state.isLoading = false;
+    });
+    builder.addCase(createProduct.rejected, (state, action) => {
+      state.error = action.error;
+      state.isLoading = false;
+    });
+  },
 });
 export default productsSlice;

@@ -34,7 +34,7 @@ const OptionsPage = () => {
   async function submitForm(data: FieldValues) {
     try {
       await dispatch(createOption(data));
-      reset()
+      reset();
     } catch (error) {
       error;
     }

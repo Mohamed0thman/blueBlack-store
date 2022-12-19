@@ -16,7 +16,7 @@ import {
   arrayRemove,
   deleteDoc,
 } from "firebase/firestore";
-import { getStorage, ref } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
   getAuth,
@@ -74,5 +74,9 @@ export {
   updateDoc,
   arrayRemove,
   arrayUnion,
-  deleteDoc, getStorage, ref
+  deleteDoc,
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
 };

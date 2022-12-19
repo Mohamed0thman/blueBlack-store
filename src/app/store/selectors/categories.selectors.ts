@@ -1,5 +1,4 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { converToMap } from "../../helpers/helpers";
 import { Category } from "../../models";
 import { RootState } from "../configureStore";
 

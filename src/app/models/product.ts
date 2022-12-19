@@ -10,6 +10,7 @@ export type Product = {
   productVariant: ProductVariant[];
   totalQuantity: number;
   discount: number;
+  published: boolean;
 };
 
 export type ProductVariant = {
