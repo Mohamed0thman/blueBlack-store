@@ -1,3 +1,4 @@
+import { NavDropdown } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -41,7 +42,26 @@ function Header() {
                 </LinkContainer>
               </>
             ) : (
-              <UserNav user={user} />
+              <>
+                {user?.roles?.some((s) => s === "admin") ? (
+                  <NavDropdown title="create" id="basic-nav-dropdown">
+                    <LinkContainer to="/dashboard/products/create">
+                      <NavDropdown.Item>create product</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Divider />
+
+                    <LinkContainer to="/dashboard/categories">
+                      <NavDropdown.Item>create category</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Divider />
+
+                    <LinkContainer to="/dashboard/options">
+                      <NavDropdown.Item>create option</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                ) : null}
+                <UserNav user={user} />
+              </>
             )}
           </Nav>
         </Navbar.Collapse>
