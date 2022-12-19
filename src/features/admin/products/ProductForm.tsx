@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button, Form, Col, Row } from "react-bootstrap";
+import { Container, Button, Form, Col, Row, Image } from "react-bootstrap";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Subcategory, Option } from "../../../app/models";
+import { Subcategory } from "../../../app/models";
 import { getCategories } from "../../../app/store/actions/categories.action";
 import { getOptions } from "../../../app/store/actions/options.action";
 import {
@@ -14,7 +14,9 @@ import { selectOptions } from "../../../app/store/selectors/options.seletcors";
 
 const ProductForm = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [optionValue, setOptionValue] = useState<Option[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
+  const [sizes, setSizes] = useState<string[]>([]);
+  const [filePreview, setFilePreview] = useState("");
 
   const dispatch = useAppDispatch();
   const categories = useAppSelector(selectCategories);
@@ -44,20 +46,53 @@ const ProductForm = () => {
     dispatch(getOptions());
   }, []);
 
-  useEffect(() => {
-    if (watch().categoryName) {
-      setSubcategories(
-        categories[watch().categoryName as number].subcategories
-      );
-    } else {
-      setSubcategories([]);
-    }
-  }, [watch().categoryName]);
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      console.log(value, name, type);
+      if (name === "colors") {
+        return setColors(
+          (prevColors: string[]) => [...prevColors, value.colors] as string[]
+        );
+      } else if (name === "sizes") {
+        return setSizes(
+          (prevSizes: string[]) => [...prevSizes, value.sizes] as string[]
+        );
+      } else if (name === "categoryName") {
+        setSubcategories(
+          categories[watch().categoryName as number].subcategories
+        );
+      } else if (name === "productImage") {
+        const newUrl = URL.createObjectURL(value.productImage[0]);
+        setFilePreview(newUrl);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch()]);
 
   return (
     <Container fluid="md">
       <Form onSubmit={handleSubmit(submitForm)}>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Row>
+          <Col>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Default file input example</Form.Label>
+              <Form.Control
+                {...register("productImage", { required: true })}
+                type="file"
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Image
+              src={
+                filePreview
+                  ? filePreview
+                  : "http://100dayscss.com/codepen/upload.svg"
+              }
+            />
+          </Col>
+        </Row>
+        <Form.Group className="mb-3" controlId="productName">
           <Form.Label> Product Name </Form.Label>
           <Form.Control
             {...register("productName", { required: true })}
@@ -65,9 +100,30 @@ const ProductForm = () => {
             placeholder="Enter Product Name"
           />
         </Form.Group>
+        <Form.Group className="mb-3" controlId="price">
+          <Form.Label> Product Price </Form.Label>
+          <Form.Control
+            min={0}
+            step="50"
+            {...register("price", { required: true })}
+            type="number"
+            placeholder="Enter Product Name"
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="discount">
+          <Form.Label> Product Discount </Form.Label>
+          <Form.Control
+            {...register("discount", { required: true })}
+            min={0}
+            max={1}
+            step=".05"
+            type="number"
+            placeholder="Enter Product Name"
+          />
+        </Form.Group>
         <Row>
           <Col>
-            <Form.Group className="mb-3" controlId="formBasicColorName">
+            <Form.Group className="mb-3" controlId="selectCatgeory">
               <Form.Label>Select Catgeory</Form.Label>
 
               <Form.Select
@@ -89,7 +145,7 @@ const ProductForm = () => {
           </Col>
 
           <Col>
-            <Form.Group className="mb-3" controlId="formBasicColorName">
+            <Form.Group className="mb-3" controlId="selectSubcategory">
               <Form.Label>Select Subcategory</Form.Label>
 
               <Form.Select
@@ -109,59 +165,103 @@ const ProductForm = () => {
             </Form.Group>
           </Col>
         </Row>
+        <Row className="">
+          <Col>
+            <Form.Group className="mb-3" controlId="selectColor">
+              <Form.Label>Select Colors</Form.Label>
+              <Form.Select
+                {...register("colors", { required: true })}
+                aria-label="Default select example"
+              >
+                <option defaultValue="" value="">
+                  Open this select menu
+                </option>
 
-        <Form.Group className="mb-3" controlId="formBasicColorName">
-          <Form.Label>Select Colors</Form.Label>
-          <Form.Select
-            {...register("colors", { required: true })}
-            aria-label="Default select example"
-          >
-            <option>Open this select menu</option>
-
-            {options.length
-              ? options.map((item) => {
-                  if (item.type === "color") {
-                    return (
-                      <option key={item.id} value={item.value}>
-                        {item.name}
-                      </option>
-                    );
-                  }
-                })
+                {options.length
+                  ? options.map((item, i) => {
+                      if (item.type === "color") {
+                        return (
+                          <option key={item.id} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      }
+                    })
+                  : null}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col className="d-flex">
+            {colors.length
+              ? colors.map((color, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      background: color,
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                    }}
+                    onClick={() =>
+                      setColors((prevColors: string[]) =>
+                        prevColors.filter((c) => c !== color)
+                      )
+                    }
+                  ></div>
+                ))
               : null}
-          </Form.Select>
-        </Form.Group>
+          </Col>
+        </Row>
 
-        <Form.Group className="mb-3" controlId="formBasicColorName">
-          <Form.Label>Select Sizes</Form.Label>
-          <Form.Select
-            {...register("sizes", { required: true })}
-            aria-label="Default select example"
-          >
-            <option>Open this select menu</option>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3" controlId="selectSize">
+              <Form.Label>Select Sizes</Form.Label>
+              <Form.Select
+                {...register("sizes", { required: true })}
+                aria-label="Default select example"
+              >
+                <option defaultValue="" value="">
+                  Open this select menu
+                </option>
 
-            {options.length
-              ? options.map((item) => {
-                  if (item.type === "size") {
-                    return (
-                      <option key={item.id} value={item.value}>
-                        {item.name}
-                      </option>
-                    );
-                  }
-                })
+                {options.length
+                  ? options.map((item) => {
+                      if (item.type === "size") {
+                        return (
+                          <option key={item.id} value={item.value}>
+                            {item.name}
+                          </option>
+                        );
+                      }
+                    })
+                  : null}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col className="d-inline-flex">
+            {sizes.length
+              ? sizes.map((size, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: "6px",
+                      height: "40px",
+                      marginRight: "7px",
+                      border: "1px solid #eeee",
+                    }}
+                    onClick={() =>
+                      setSizes((prevSizes: string[]) =>
+                        prevSizes.filter((s) => s !== size)
+                      )
+                    }
+                  >
+                    {size}
+                  </div>
+                ))
               : null}
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            {...register("password", { required: true })}
-            type="Password"
-            placeholder="Password"
-          />
-        </Form.Group>
+          </Col>
+        </Row>
 
         <Button itemType="submit" variant="primary" type="submit">
           Submit

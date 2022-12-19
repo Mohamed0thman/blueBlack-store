@@ -27,12 +27,14 @@ const OptionsPage = () => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
   async function submitForm(data: FieldValues) {
     try {
       await dispatch(createOption(data));
+      reset()
     } catch (error) {
       error;
     }

@@ -17,6 +17,6 @@ export type ProductVariant = {
   color: string;
   size: string;
   extraPrice: number;
-  galary: string[];
+  image: string;
   quantity: number;
 };
