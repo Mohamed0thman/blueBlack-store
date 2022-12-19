@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
-import { getStorage } from "firebase/storage";
 import {
   getFirestore,
   doc,
@@ -17,6 +16,7 @@ import {
   arrayRemove,
   deleteDoc,
 } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 
 import {
   getAuth,
@@ -74,5 +74,5 @@ export {
   updateDoc,
   arrayRemove,
   arrayUnion,
-  deleteDoc,
+  deleteDoc, getStorage, ref
 };

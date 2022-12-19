@@ -10,31 +10,32 @@ import {
   getDocs,
   setDoc,
 } from "../../fireBase";
-export const createNewProduct = createAsyncThunk<Product, FieldValues>(
-  "options",
+export const createProduct = createAsyncThunk<string, FieldValues>(
+  "postProduct",
   async (req, thunkAPI) => {
     try {
+      console.log("req", req);
 
-      const docColorRef = await addDoc(collection(db, "product"), {
-        productName: req.name,
-        ProductPrice: req.price,
-        productImage: req.image,
-        productColors: [],
-        productSizes: [],
-        productVariant: [],
-      });
+      // const docColorRef = await addDoc(collection(db, "products"), {
+      //   productName: req.name,
+      //   ProductPrice: req.price,
+      //   productImage: req.image,
+      //   productColors: [],
+      //   productSizes: [],
+      //   productVariant: [],
+      // });
 
-      const propduct: Product = {
-        productId: docColorRef.id,
-        productName: req.name,
-        ProductPrice: req.price,
-        productImage: req.image,
-        productColors: [],
-        productSizes: [],
-        productVariant: [],
-      };
+      // const propduct: Product = {
+      //   productId: docColorRef.id,
+      //   productName: req.name,
+      //   ProductPrice: req.price,
+      //   productImage: req.image,
+      //   productColors: [],
+      //   productSizes: [],
+      //   productVariant: [],
+      // };
 
-      return propduct;
+      return "";
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }

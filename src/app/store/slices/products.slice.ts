@@ -2,14 +2,12 @@ import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { Product } from "../../models";
 
 export interface ProdictState {
-  products?: Product[] | null;
-  selectedProduct?: Product | null;
+  products: Product[];
   error?: SerializedError;
   isLoading?: boolean;
 }
 const initialState: ProdictState = {
-  products: null,
-  selectedProduct: null,
+  products: [],
   error: undefined,
   isLoading: true,
 };

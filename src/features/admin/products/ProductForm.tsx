@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Container, Button, Form, Col, Row, Image } from "react-bootstrap";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Subcategory } from "../../../app/models";
+import { converOptionToVariants } from "../../../app/helpers/helpers";
+import { Color, Option, Size, Subcategory } from "../../../app/models";
 import { getCategories } from "../../../app/store/actions/categories.action";
 import { getOptions } from "../../../app/store/actions/options.action";
+import { createProduct } from "../../../app/store/actions/product.action";
 import {
   useAppDispatch,
   useAppSelector,
@@ -14,8 +16,8 @@ import { selectOptions } from "../../../app/store/selectors/options.seletcors";
 
 const ProductForm = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [colors, setColors] = useState<string[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
+  const [colors, setColors] = useState<Color[]>([]);
+  const [sizes, setSizes] = useState<Size[]>([]);
   const [filePreview, setFilePreview] = useState("");
 
   const dispatch = useAppDispatch();
@@ -29,15 +31,6 @@ const ProductForm = () => {
     formState: { errors },
   } = useForm();
 
-  async function submitForm(data: FieldValues) {
-    try {
-      // await dispatch(createCategory(data));
-      toast.success("product created successful ");
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
   useEffect(() => {
     dispatch(getCategories());
   }, []);
@@ -48,16 +41,7 @@ const ProductForm = () => {
 
   React.useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(value, name, type);
-      if (name === "colors") {
-        return setColors(
-          (prevColors: string[]) => [...prevColors, value.colors] as string[]
-        );
-      } else if (name === "sizes") {
-        return setSizes(
-          (prevSizes: string[]) => [...prevSizes, value.sizes] as string[]
-        );
-      } else if (name === "categoryName") {
+      if (name === "categoryName") {
         setSubcategories(
           categories[watch().categoryName as number].subcategories
         );
@@ -68,6 +52,53 @@ const ProductForm = () => {
     });
     return () => subscription.unsubscribe();
   }, [watch()]);
+
+  function selctColor(value: string) {
+    const index: number = Number(value);
+    const isExist = colors.find(
+      (item) => item.colorName === options[index].name
+    );
+
+    if (!isExist) {
+      const color = options[index as number] as Option;
+      setColors(
+        (prev: Color[]) =>
+          [
+            ...prev,
+            { colorName: color.name, colorValue: color.value },
+          ] as Color[]
+      );
+    }
+  }
+
+  function selctSize(value: string) {
+    const index: number = Number(value);
+    const isExist = sizes.find((item) => item.sizeName === options[index].name);
+
+    if (!isExist) {
+      const size = options[index as number] as Option;
+
+      setSizes(
+        (prev: Size[]) =>
+          [...prev, { sizeName: size.name, sizeValue: size.value }] as Size[]
+      );
+    }
+  }
+
+  async function submitForm(data: FieldValues) {
+    try {
+      const productVariant = converOptionToVariants(
+        watch("productName"),
+        colors,
+        sizes
+      );
+
+      await dispatch(createProduct({ ...data, colors, sizes, productVariant }));
+      toast.success("product created successful ");
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
 
   return (
     <Container fluid="md">
@@ -165,12 +196,12 @@ const ProductForm = () => {
             </Form.Group>
           </Col>
         </Row>
-        <Row className="">
+        <Row className="align-items-center">
           <Col>
             <Form.Group className="mb-3" controlId="selectColor">
               <Form.Label>Select Colors</Form.Label>
               <Form.Select
-                {...register("colors", { required: true })}
+                onChange={(e) => selctColor(e.target.value)}
                 aria-label="Default select example"
               >
                 <option defaultValue="" value="">
@@ -181,7 +212,7 @@ const ProductForm = () => {
                   ? options.map((item, i) => {
                       if (item.type === "color") {
                         return (
-                          <option key={item.id} value={item.value}>
+                          <option key={item.id} value={i}>
                             {item.name}
                           </option>
                         );
@@ -197,28 +228,25 @@ const ProductForm = () => {
                   <div
                     key={i}
                     style={{
-                      background: color,
+                      background: color.colorValue,
                       width: "20px",
                       height: "20px",
                       borderRadius: "50%",
+                      marginRight: "8px",
                     }}
-                    onClick={() =>
-                      setColors((prevColors: string[]) =>
-                        prevColors.filter((c) => c !== color)
-                      )
-                    }
+                    onClick={() => setColors(() => colors.splice(i, 1))}
                   ></div>
                 ))
               : null}
           </Col>
         </Row>
 
-        <Row>
+        <Row className="align-items-center">
           <Col>
             <Form.Group className="mb-3" controlId="selectSize">
               <Form.Label>Select Sizes</Form.Label>
               <Form.Select
-                {...register("sizes", { required: true })}
+                onChange={(e) => selctSize(e.target.value)}
                 aria-label="Default select example"
               >
                 <option defaultValue="" value="">
@@ -226,10 +254,10 @@ const ProductForm = () => {
                 </option>
 
                 {options.length
-                  ? options.map((item) => {
+                  ? options.map((item, i) => {
                       if (item.type === "size") {
                         return (
-                          <option key={item.id} value={item.value}>
+                          <option key={item.id} value={i}>
                             {item.name}
                           </option>
                         );
@@ -250,13 +278,9 @@ const ProductForm = () => {
                       marginRight: "7px",
                       border: "1px solid #eeee",
                     }}
-                    onClick={() =>
-                      setSizes((prevSizes: string[]) =>
-                        prevSizes.filter((s) => s !== size)
-                      )
-                    }
+                    onClick={() => setSizes(() => sizes.splice(i, 1))}
                   >
-                    {size}
+                    {size.sizeValue}
                   </div>
                 ))
               : null}

@@ -1,8 +1,7 @@
 import { Basket, BasketItem } from "./basket";
 import User from "./user";
-import Size from "./size";
-import Color from "./color";
-import { Product, ProductVariant } from "./product";
+
+import { Product, ProductVariant, Color, Size } from "./product";
 import { Category, Subcategory } from "./category";
 import { Option } from "./options";
 

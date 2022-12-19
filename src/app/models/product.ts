@@ -5,8 +5,8 @@ export type Product = {
   subcategoryName: string;
   ProductPrice: number;
   productImage: string;
-  productColors: string[];
-  productSizes: string[];
+  productColors: Color[];
+  productSizes: Size[];
   productVariant: ProductVariant[];
   totalQuantity: number;
   discount: number;
@@ -19,4 +19,14 @@ export type ProductVariant = {
   extraPrice: number;
   image: string;
   quantity: number;
+};
+
+export type Color = {
+  colorName: string;
+  colorValue: string;
+};
+
+export type Size = {
+  sizeName: string;
+  sizeValue: string;
 };
