@@ -3,7 +3,7 @@ import User from "./user";
 
 import { Product, ProductVariant, Color, Size } from "./product";
 import { Category, Subcategory } from "./category";
-import { Option } from "./options";
+import { Option } from "./option";
 
 export type {
   Basket,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Button, Form, Col, Row, Image } from "react-bootstrap";
 import { FieldValues, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { converOptionToVariants } from "../../../app/helpers/helpers";
 import { Color, Option, Size, Subcategory } from "../../../app/models";
@@ -15,6 +16,7 @@ import { selectCategories } from "../../../app/store/selectors/categories.select
 import { selectOptions } from "../../../app/store/selectors/options.seletcors";
 
 const ProductForm = () => {
+  const navigate = useNavigate();
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
   const [sizes, setSizes] = useState<Size[]>([]);
@@ -30,10 +32,6 @@ const ProductForm = () => {
     watch,
     formState: { errors },
   } = useForm();
-
-  useEffect(() => {
-    dispatch(getCategories());
-  }, []);
 
   useEffect(() => {
     dispatch(getOptions());
@@ -93,8 +91,12 @@ const ProductForm = () => {
         sizes
       );
 
-      await dispatch(createProduct({ ...data, colors, sizes, productVariant }));
-      toast.success("product created successful ");
+      await dispatch(
+        createProduct({ ...data, colors, sizes, productVariant })
+      ).then(() => {
+        toast.success("product created successful ");
+        navigate(`/dashboard/products${data.productName}`);
+      });
     } catch (error: any) {
       console.log(error.message);
     }

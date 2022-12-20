@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import LoginPage from "../../features/account/Login";
@@ -19,8 +19,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Categories from "../../features/admin/categories/Categories";
 import Subcategories from "../../features/admin/categories/Subcategories";
 import OptionsPage from "../../features/admin/options/OptionsPage";
-import PreviewPriductTable from "../../features/admin/products/PreviewPriductTable";
 import ProductForm from "../../features/admin/products/ProductForm";
+import Invetory from "../../features/admin/products/Invetory";
+import PreviewProductPage from "../../features/admin/products/PreviewProductPage";
+import { getCategories } from "../store/actions/categories.action";
 
 function App() {
   const { isLoading } = useAppSelector((state) => state.auth);
@@ -48,6 +50,10 @@ function App() {
     });
 
     return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    dispatch(getCategories());
   }, []);
 
   return !isLoading ? (
@@ -90,14 +96,6 @@ function App() {
           }
         />
         <Route
-          path="/dashboard/products"
-          element={
-            <PrivateRoute roles={["admin"]}>
-              <PreviewPriductTable />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/dashboard/products/create"
           element={
             <PrivateRoute roles={["admin"]}>
@@ -105,6 +103,23 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/dashboard/products"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <Invetory />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/products/:productName"
+          element={
+            <PrivateRoute roles={["admin"]}>
+              <PreviewProductPage />
+            </PrivateRoute>
+          }
+        />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
       </Routes>

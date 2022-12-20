@@ -36,10 +36,6 @@ const Categories = () => {
     }
   }
 
-  useEffect(() => {
-    dispatch(getCategories());
-  }, []);
-
   return (
     <Container fluid="md">
       <Form onSubmit={handleSubmit(submitForm)}>
@@ -64,29 +60,23 @@ const Categories = () => {
           Submit
         </Button>
       </Form>
-      <Form>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Order</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.length
-              ? categories.map((category, index) => (
-                  <CategoryTable
-                    category={category}
-                    key={index}
-                    index={index}
-                  />
-                ))
-              : null}
-          </tbody>
-        </Table>
-      </Form>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Order</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.length
+            ? categories.map((category, index) => (
+                <CategoryTable category={category} key={index} index={index} />
+              ))
+            : null}
+        </tbody>
+      </Table>
     </Container>
   );
 };

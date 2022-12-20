@@ -13,6 +13,7 @@ import {
   setDoc,
   uploadBytes,
   getDownloadURL,
+  deleteDoc,
 } from "../../fireBase";
 import { IProductState } from "../slices/products.slice";
 
@@ -24,6 +25,8 @@ export const getProducts = createAsyncThunk<IProductState>(
   async (_, thunkAPI) => {
     try {
       const productsSnapShot = await getDocs(collection(db, "products"));
+
+      console.log("productsSnapShot", productsSnapShot.docs);
 
       const products: Product[] = productsSnapShot.docs.map((docSnapshot) => {
         const {
@@ -64,7 +67,7 @@ export const getProducts = createAsyncThunk<IProductState>(
 
 // Create Product
 export const createProduct = createAsyncThunk<IProductState, FieldValues>(
-  "postProduct",
+  "getProduct",
   async (req, thunkAPI) => {
     try {
       console.log("req", req);
@@ -116,6 +119,19 @@ export const createProduct = createAsyncThunk<IProductState, FieldValues>(
       };
 
       return { products: [product] };
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+
+///delete product
+export const deleteProduct = createAsyncThunk<{ id: string }, { id: string }>(
+  "deleteProduct",
+  async (req, thunkAPI) => {
+    try {
+      await deleteDoc(doc(db, "products", req.id));
+      return { id: req.id };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
